@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Signal Control</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <h1>Traffic Signal Timing</h1>
+    
+    <div id="lane1" class="lane">
+        <h2>Lane 1</h2>
+        <p id="lane1-timing">0s</p>
+    </div>
+
+    <div id="lane2" class="lane">
+        <h2>Lane 2</h2>
+        <p id="lane2-timing">0s</p>
+    </div>
+
+    <div id="lane3" class="lane">
+        <h2>Lane 3</h2>
+        <p id="lane3-timing">0s</p>
+    </div>
+
+    <div id="lane4" class="lane">
+        <h2>Lane 4</h2>
+        <p id="lane4-timing">0s</p>
+    </div>
+
+    <script>
+        // Function to update the timings on the webpage
+        function updateTimings() {
+            fetch('/get_timings')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('lane1-timing').textContent = data.lane1.toFixed(2) + 's';
+                document.getElementById('lane2-timing').textContent = data.lane2.toFixed(2) + 's';
+                document.getElementById('lane3-timing').textContent = data.lane3.toFixed(2) + 's';
+                document.getElementById('lane4-timing').textContent = data.lane4.toFixed(2) + 's';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Update timings every 2 seconds
+        setInterval(updateTimings, 2000);
+    </script>
+
+</body>
+</html>
