@@ -1,0 +1,73 @@
+import time
+import numpy as np
+
+# Simulate sensor data read function
+def read_sensors():
+    # Simulate random vehicle counts for each lane
+    return {
+        'lane1': np.random.randint(0, 10),  # Simulate random traffic counts
+        'lane2': np.random.randint(0, 10),
+        'lane3': np.random.randint(0, 10),
+        'lane4': np.random.randint(0, 10)
+    }
+
+# Calculate traffic light timing based on sensor data and lane priority
+def calculate_timing(sensor_data):
+    total_vehicles = sum(sensor_data.values())
+    base_time = 60  # Base green light time in seconds
+    min_time = 10   # Minimum green light duration
+    max_time = 90   # Maximum green light duration
+
+    # Define lane priority (higher number = higher priority)
+    lane_priority = {
+        'lane1': 1.0,  # Example: Main road
+        'lane2': 1.0,  # Example: Secondary road
+        'lane3': 1.0,  # Example: Side road
+        'lane4': 1.0   # Example: Priority lane (e.g., bus lane)
+    }
+
+    timing = {}
+    for lane, count in sensor_data.items():
+        if total_vehicles > 0:
+            lane_time = base_time * (count / total_vehicles) * lane_priority[lane]
+            timing[lane] = min(max(lane_time, min_time), max_time)  # Ensure within bounds
+        else:
+            timing[lane] = min_time  # Default to minimum time if no vehicles
+
+    return timing
+
+# Mock function to control traffic lights with yellow and red phases
+def control_traffic_lights(timing):
+    yellow_time = 3  # Fixed yellow light duration
+    red_time = 2     # Fixed red light duration between green lights
+
+    for lane, duration in timing.items():
+        # Green light phase
+        print(f"Setting {lane} green light for {duration:.2f} seconds.")
+        time.sleep(duration)
+
+        # Yellow light phase
+        print(f"Setting {lane} yellow light for {yellow_time} seconds.")
+        time.sleep(yellow_time)
+
+        # Red light phase (all lanes red for a short period)
+        print(f"All lanes red for {red_time} seconds.")
+        time.sleep(red_time)
+
+# Main function to run the traffic control system
+def main():
+    while True:
+        # Read sensor data from lanes
+        sensor_data = read_sensors()
+        print(f"Sensor Data: {sensor_data}")
+
+        # Calculate green light timing based on sensor data and priorities
+        timing = calculate_timing(sensor_data)
+        print(f"Calculated Timing: {timing}")
+
+        # Control traffic lights based on calculated timing
+        control_traffic_lights(timing)
+        time.sleep(1)  # Adjust loop frequency as needed
+
+if __name__ == "__main__":
+    main()
